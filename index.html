@@ -44,10 +44,14 @@
 
 		function fitElement(element, start, end){
 
-			const size = (end + start) / 2;
+			let size = (end + start) / 2;
 			element.style.fontSize = `${size}px`;
 
 			if(Math.abs(start - end) < 1){
+				while(element.scrollHeight > element.offsetHeight){
+					size--;
+					element.style.fontSize = `${size}px`;
+				}
 				return;
 			}
 
@@ -80,30 +84,37 @@
   <body>
     <div class="reveal">
       <div class="slides"><section  data-markdown><script type="text/template">
+<!-- .slide: class="drop" data-background-image="Bilder/blue-abstract-gradient-wave-wallpaper.jpg" -->
 
-<div class="has-light-background reset-margin" style="background-color: #FFFFFF; padding: 0px; box-sizing: border-box; position: absolute; left: 0px; top: 0px; height: 240px; min-height: 240px; width: 1920px; display: flex; flex-direction: column; align-items: center; justify-content: space-evenly" >
+<div class="reset-margin" style="padding: 0px; box-sizing: border-box; position: absolute; left: 0px; top: 0px; height: 240px; min-height: 240px; width: 1920px; display: flex; flex-direction: column; align-items: center; justify-content: space-evenly" >
 
 # Marc Bielert
 ## Präsentationen
 </div>
-<div class="has-light-background reset-margin" style="background-color: #FFFFFF; padding: 0px; box-sizing: border-box; position: absolute; left: 0px; top: 264px; height: 600px; min-height: 600px; width: 1920px; display: flex; flex-direction: column; align-items: flex-start; justify-content: space-evenly" align="left">
+<div class="has-light-background reset-margin" style="background-color: #FFFFFF00; padding: 0px; box-sizing: border-box; position: absolute; left: 0px; top: 264px; height: 600px; min-height: 600px; width: 1920px; display: flex; flex-direction: column; align-items: flex-start; justify-content: space-evenly" align="left">
 
 - ## [Demo](https://abhuva.github.io/presentations/localhost.htm#/)
 - ## [Inklusive Bewegungsspiele](https://abhuva.github.io/presentations/Inklusive_Bewegungsspiele_Präsentation/index.html)
 - ## [Functional Juggling Teacher Training](https://abhuva.github.io/presentations/Functional_Juggling_Teacher_Training/index.html)
-- ## more to come...
+	- 02.-05.05.2022 in Halle (Germany)
+- ## [Functional Juggling with 2-6 years old](https://abhuva.github.io/presentations/Functional_juggling_with_2-6_years_old/index.html)
+	- 03.06.2022 in Budapest (Hungary)
+- ## [SiteSwap and PropSwap - Can they be friends](https://abhuva.github.io/presentations/SiteSwap_and_PropSwap_-_Can_they_be_friends/index.html)
+	- 04.06.2022 in Budapest (Hungary)
 </div>
-<div class="has-light-background reset-margin" style="background-color: #FFFFFF; padding: 20px; box-sizing: border-box; position: absolute; left: 0px; top: 960px; height: 216px; min-height: 216px; width: 1920px; display: flex; flex-direction: column; align-items: flex-start; justify-content: space-evenly" align="left">
+<div class="has-light-background reset-margin" style="background-color: #FFFFFF00; padding: 20px; box-sizing: border-box; position: absolute; left: 0px; top: 960px; height: 216px; min-height: 216px; width: 1920px; display: flex; flex-direction: column; align-items: flex-start; justify-content: space-evenly" align="left">
 
 ## [Website](https://www.eigenarts-halle.de)
 
-</div>
-<!-- .slide: class="drop" -->
-</script></section><section  data-markdown><script type="text/template">
+</div></script></section><section  data-markdown><script type="text/template">
 # Testing Ground
 Experimente, etc...
 </script></section><section  data-markdown><script type="text/template">
 # About me
+</script></section><section  data-markdown><script type="text/template">
+# Credits
+
+<a href='https://www.freepik.com/photos/glass-pattern'>Glass pattern photo created by rawpixel.com - www.freepik.com</a>
 </script></section></div>
     </div>
 
@@ -115,6 +126,8 @@ Experimente, etc...
     <script src="plugin/notes/notes.js"></script>
     <script src="plugin/math/math.js"></script>
 	<script src="plugin/mermaid/mermaid.js"></script>
+	<script src="plugin/chart/chart.min.js"></script>
+	<script src="plugin/chart/plugin.js"></script>
 	<script src="plugin/menu/menu.js"></script>
 	<script src="plugin/customcontrols/plugin.js"></script>
 
@@ -132,6 +145,29 @@ Experimente, etc...
         return target;
       }
 
+	  function isLight(color) {
+		let hex = color.replace('#', '');
+
+		// convert #fff => #ffffff
+		if(hex.length == 3){
+			hex = `${hex[0]}${hex[0]}${hex[1]}${hex[1]}${hex[2]}${hex[2]}`;
+		}
+
+		const c_r = parseInt(hex.substr(0, 2), 16);
+		const c_g = parseInt(hex.substr(2, 2), 16);
+		const c_b = parseInt(hex.substr(4, 2), 16);
+		const brightness = ((c_r * 299) + (c_g * 587) + (c_b * 114)) / 1000;
+		return brightness > 155;
+	}
+
+	var bgColor = getComputedStyle(document.documentElement).getPropertyValue('--r-background-color').trim();
+
+	if(isLight(bgColor)){
+		document.body.classList.add('has-light-background');
+	} else {
+		document.body.classList.add('has-dark-background');
+	}
+
       // default options to init reveal.js
       var defaultOptions = {
         controls: true,
@@ -146,6 +182,7 @@ Experimente, etc...
           RevealNotes,
           RevealMath.MathJax3,
 		  RevealMermaid,
+		  RevealChart,
 		  RevealCustomControls,
 		  RevealMenu,
         ],
